@@ -6,18 +6,25 @@ class Settings(BaseSettings):
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
     
-    MONGO_URI: str = "mongodb://localhost:27017"
-    DB_NAME: str = "voting_platform"
+    # Supabase
+    SUPABASE_URL: Optional[str] = None
+    SUPABASE_KEY: Optional[str] = None
 
+    # Google
     GOOGLE_CLIENT_ID: Optional[str] = None
     GOOGLE_CLIENT_SECRET: Optional[str] = None
     GOOGLE_REDIRECT_URI: str = "http://localhost:8000/auth/callback/google"
 
+    # LinkedIn
     LINKEDIN_CLIENT_ID: Optional[str] = None
     LINKEDIN_CLIENT_SECRET: Optional[str] = None
     LINKEDIN_REDIRECT_URI: str = "http://localhost:8000/auth/callback/linkedin"
+    
+    # Frontend
+    FRONTEND_URL: str = "http://localhost:5500"
 
     class Config:
         env_file = ".env"
+        extra = "ignore"
 
 settings = Settings()
