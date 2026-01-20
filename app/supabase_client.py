@@ -1,5 +1,5 @@
 import os
-from supabase_client import create_client, Client
+from supabase import create_client, Client
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_KEY = os.getenv("SUPABASE_KEY")
