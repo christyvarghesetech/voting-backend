@@ -8,7 +8,7 @@ from fastapi.security import OAuth2PasswordBearer
 from app.config import settings
 from app.models import TokenData, UserInDB
 
-from supabase_client import supabase
+from app.supabase_client import supabase
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
