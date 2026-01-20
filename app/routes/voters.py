@@ -16,10 +16,11 @@ async def get_voters():
     users = response.data
     
     voters = []
-    for user in users:
-        # Check against None to avoid crashes
-        name = user.get("name") or "Unknown"
-        profile = user.get("linkedin_profile_url") or ""
-        voters.append(VoterInfo(name=name, linkedin_profile_url=profile))
+    if users:
+        for user in users:
+            # Check against None to avoid crashes
+            name = user.get("name") or "Unknown"
+            profile = user.get("linkedin_profile_url") or ""
+            voters.append(VoterInfo(name=name, linkedin_profile_url=profile))
         
     return voters

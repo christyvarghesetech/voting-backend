@@ -4,7 +4,7 @@ load_dotenv()
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
 
-# Supabase client (already created in supabase_client.py)
+# Supabase client
 from app.supabase_client import supabase
 
 # Routes

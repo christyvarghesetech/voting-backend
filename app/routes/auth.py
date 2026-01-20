@@ -1,10 +1,12 @@
-from fastapi import APIRouter, Depends, HTTPException, status, Request
+from fastapi import APIRouter, Depends
 from fastapi.responses import RedirectResponse
 import httpx
+
 from app.config import settings
 from app.supabase_client import supabase
-from app.models import UserCreate, UserInDB, Token
+from app.models import UserInDB
 from app.auth import create_access_token, get_current_user
+from pydantic import BaseModel
 
 router = APIRouter()
 
@@ -85,7 +87,7 @@ async def callback_linkedin(code: str):
     
     async with httpx.AsyncClient() as client:
         response = await client.post(token_url, data=data, headers={"Content-Type": "application/x-www-form-urlencoded"})
-        response.raise_for_status() # LinkedIn might return 200 with error, handle gracefully in prod
+        response.raise_for_status()
         token_data = response.json()
         access_token = token_data.get("access_token")
         
@@ -100,7 +102,7 @@ async def callback_linkedin(code: str):
         "picture": user_info.get("picture"),
         "provider": "linkedin",
         "provider_id": user_info.get("sub"),
-        "linkedin_profile_url": f"https://www.linkedin.com/in/{user_info.get('sub')}" # Placeholder fallback
+        "linkedin_profile_url": f"https://www.linkedin.com/in/{user_info.get('sub')}"
     }
 
     # Check/Create User
@@ -118,7 +120,6 @@ async def callback_linkedin(code: str):
     jwt_token = create_access_token(data={"sub": user_id})
     return RedirectResponse(f"{settings.FRONTEND_URL}/candidates.html?token={jwt_token}")
 
-from pydantic import BaseModel
 
 class UserUpdate(BaseModel):
     linkedin_profile_url: str

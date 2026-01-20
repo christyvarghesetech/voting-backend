@@ -12,10 +12,10 @@ class UserCreate(UserBase):
     provider_id: str
 
 class UserInDB(UserBase):
-    id: Optional[str] = None  # Supabase UUID
+    id: Optional[str] = None
     provider: str
     has_voted: bool = False
-    voted_candidate_id: Optional[int] = None # Integer ID for candidates
+    voted_candidate_id: Optional[int] = None
 
     class Config:
         from_attributes = True
@@ -28,14 +28,14 @@ class CandidateBase(BaseModel):
     logo_url: Optional[str] = None
 
 class CandidateInDB(CandidateBase):
-    id: int # Integer ID
+    id: int
     vote_count: int = 0
 
     class Config:
         from_attributes = True
 
 class VoteCreate(BaseModel):
-    candidate_id: int # Changed to int to match probable SQL schema
+    candidate_id: int
 
 class Token(BaseModel):
     access_token: str

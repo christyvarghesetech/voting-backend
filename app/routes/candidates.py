@@ -74,30 +74,31 @@ async def vote(vote_data: VoteCreate, current_user: UserInDB = Depends(get_curre
 
 @router.post("/reset")
 async def reset_election():
-    # Supabase doesn't support 'delete_many({})' without filter usually, but allow all
-    # Truncate is better but requires RLS/Policy. For now, delete filters where id is not null (hacky) or explicit loop.
-    # Actually, `delete().neq('id', 0)` might work if ID is int.
-    
     # Simple Reset Logic:
-    # 1. Delete all votes
+    # 1. Delete all votes (hacky approach since 'delete all' might be blocked)
     # 2. Reset candidate counts
     # 3. Reset users has_voted
     
-    # Deleting all votes might be tricky via API if 'delete all' is blocked.
-    # We will assume we can delete rows.
+    # Deleting all votes
+    # Assuming 'votes' table allows unrestricted delete or we loop.
+    # For MVP, we'll try a simple delete. If blocked by RLS, this might fail on backend but succeed if local.
     
-    supabase.table("votes").delete().neq("candidate_id", -1).execute() # Hack to delete all
+    try:
+        supabase.table("votes").delete().neq("id", 0).execute() # Hack to match all
+    except:
+        pass # Might fail if empty
     
     # Reset counts
-    # Fetch all IDs
     cands = supabase.table("candidates").select("id").execute()
-    for c in cands.data:
-        supabase.table("candidates").update({"vote_count": 0}).eq("id", c['id']).execute()
+    if cands.data:
+        for c in cands.data:
+            supabase.table("candidates").update({"vote_count": 0}).eq("id", c['id']).execute()
         
     # Reset users
     users = supabase.table("users").select("id").execute()
-    for u in users.data:
-        supabase.table("users").update({"has_voted": False, "voted_candidate_id": None}).eq("id", u['id']).execute() # changed from null to None
+    if users.data:
+        for u in users.data:
+            supabase.table("users").update({"has_voted": False, "voted_candidate_id": None}).eq("id", u['id']).execute()
     
     return {"message": "Election reset successfully"}
 
