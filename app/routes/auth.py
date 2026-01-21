@@ -102,7 +102,7 @@ async def callback_linkedin(code: str):
         "picture": user_info.get("picture"),
         "provider": "linkedin",
         "provider_id": user_info.get("sub"),
-        "linkedin_profile_url": f"https://www.linkedin.com/in/{user_info.get('sub')}"
+        # "linkedin_profile_url": Cannot be derived from sub. User must fetch manually.
     }
 
     # Check/Create User
