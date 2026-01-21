@@ -21,7 +21,7 @@ class Settings(BaseSettings):
     LINKEDIN_REDIRECT_URI: str = "http://localhost:8000/auth/callback/linkedin"
     
     # Frontend
-    FRONTEND_URL: str = "http://localhost:5500"
+    FRONTEND_URL: str = "https://online-voting-platform-khaki.vercel.app"
 
     class Config:
         env_file = ".env"
